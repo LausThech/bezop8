@@ -33,7 +33,7 @@
 
     function primeFactors(n) { // получает один параметр n и возвращает массив простых множителей этого числа.
       let factors = [];
-      let divisor = 2;
+      let divisor = 2; // используется в алгоритме факторизации числа на простые множители.
       while (n >= divisor * divisor) {
         if (n % divisor === 0) {
           factors.push(divisor);

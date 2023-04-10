@@ -1,59 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title></title>
-
+  <title>Нахождение первообразного корня по модулю</title>
 </head>
 <body>
+  <label for="modulo">Модуль:</label>
+  <input type="number" id="modulo" min="2"><br>
+  <button onclick="findPrimitiveRoot()">Найти первообразный корень</button>
+  <p id="result"></p>
+  <script>
+    function primitiveRoot(modulo) {
+      if (modulo < 2) { // проверка на положительное число
+        return -1;
+      }
+      let phi = modulo - 1;
+      let factors = primeFactors(phi);
+      for (let root = 2; root <= modulo; root++) {
+        let isPrimitive = true;
+        for (let i = 0; i < factors.length; i++) {
+          let factor = factors[i];
+          if (modPow(root, phi / factor, modulo) === 1) {
+            isPrimitive = false;
+            break;
+          }
+        }
+        if (isPrimitive) {
+          return root;
+        }
+      }
+      return -1; // первообразный корень не найден
+    }
 
-<input type="text" id="id" placeholder="N">
-<button onclick="code1()">Ввести</button>
+    function primeFactors(n) {
+      let factors = [];
+      let divisor = 2;
+      while (n >= divisor * divisor) {
+        if (n % divisor === 0) {
+          factors.push(divisor);
+          n /= divisor;
+        } else {
+          divisor++;
+        }
+      }
+      if (n > 1) {
+        factors.push(n);
+      }
+      return factors;
+    }
 
-<script type="text/javascript">
-function code1(){
-var n = document.getElementById("id").value
-var fe=0;
-for(i=0;i<n;i++){
-if(GCD(n,i)==1){
-fe++;
+    function modPow(base, exponent, modulo) { // возведение в степень по модулю
+      let result = 1;
+      base %= modulo;
+      while (exponent > 0) {
+        if (exponent % 2 === 1) {
+          result = (result * base) % modulo;
+        }
+        base = (base * base) % modulo;
+        exponent >>= 1;
+      }
+      return result;
+    }
 
-}
-
-}
-
-for(i=2;i<n;i++){
-if((i**fe)%n==1){
-alert('ответ:'+ i )
-break;
-}
-}
-}
-function GCD(a,b)
-{
-if (a == 0)
-{
-return b;
-}
-else
-{
-while (b != 0)
-{
-if (a > b)
-{
-a -= b;
-}
-else
-{
-b -= a;
-}
-}
-
-return a;
-}
-}
-</script>
+    function findPrimitiveRoot() {
+      const modulo = parseInt(document.getElementById("modulo").value);
+      const root = primitiveRoot(modulo);
+      const result = document.getElementById("result");
+      if (root === -1) {
+        result.textContent = "Первообразный корень не найден";
+      } else {
+        result.textContent = `Первообразный корень по модулю ${modulo} равен ${root}`;
+      }
+    }
+  </script>
 </body>
 </html>
